@@ -24891,14 +24891,46 @@
 /***/ (function(module, exports, __webpack_require__) {
 
 	let React = __webpack_require__(1);
+
 	let login = React.createClass({
 	  displayName: "login",
 
+	  handleSubmit: function () {
+	    this.preventDefault();
+	  },
 	  render: function () {
 	    return React.createElement(
 	      "div",
-	      null,
-	      "login"
+	      { className: "row justify-content-center" },
+	      React.createElement(
+	        "form",
+	        { className: "col-md-6 col-lg-4" },
+	        React.createElement(
+	          "div",
+	          { clasName: "form-group" },
+	          React.createElement(
+	            "label",
+	            { "for": "useremail" },
+	            "Email"
+	          ),
+	          React.createElement("input", { className: "form-control", type: "email", required: true })
+	        ),
+	        React.createElement(
+	          "div",
+	          { className: "form-group" },
+	          React.createElement(
+	            "label",
+	            { "for": "password" },
+	            "Password"
+	          ),
+	          React.createElement("input", { className: "form-control", type: "password", required: true })
+	        ),
+	        React.createElement(
+	          "button",
+	          { type: "submit", onClick: this.handleSubmit },
+	          "Submit"
+	        )
+	      )
 	    );
 	  }
 	});

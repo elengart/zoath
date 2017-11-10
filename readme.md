@@ -1,4 +1,6 @@
-# React Project Boilerplate
+# React App Demo
+
+### form validation, authentication and grid functions
 
 # install
 $ npm install
