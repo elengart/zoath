@@ -5,8 +5,8 @@ let main = React.createClass({
   render: function() {
     return (
       <div>
-          <header className="navbar navbar-light bg-faded">
-            <nav className="nav nav-pills justify-content-center">
+          <header className="navbar navbar-light bg-light justify-content-center">
+            <nav className="nav">
               <Link className="nav-link" to="login" activeClassName="active">
                 Login
               </Link>

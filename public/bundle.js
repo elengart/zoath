@@ -25436,10 +25436,10 @@
 	      null,
 	      React.createElement(
 	        "header",
-	        { className: "navbar navbar-light bg-faded" },
+	        { className: "navbar navbar-light bg-light justify-content-center" },
 	        React.createElement(
 	          "nav",
-	          { className: "nav nav-pills justify-content-center" },
+	          { className: "nav" },
 	          React.createElement(
 	            Link,
 	            { className: "nav-link", to: "login", activeClassName: "active" },
@@ -25470,47 +25470,85 @@
 	let React = __webpack_require__(1);
 
 	let login = React.createClass({
-	  displayName: "login",
+	  displayName: 'login',
 
-	  handleSubmit: function () {
-	    this.preventDefault();
+
+	  onFormSubmit: function (e) {
+	    let f = this.refs.loginForm;
+	    if (f.checkValidity() === false) {
+	      event.preventDefault();
+	      event.stopPropagation();
+	    }
+	    f.classList.add('was-validated');
 	  },
+
+	  // don't show validation messages on change
+	  onInputChange: function () {
+	    let f = this.refs.loginForm;
+	    f.classList.remove('was-validated');
+	  },
+
 	  render: function () {
 	    return React.createElement(
-	      "div",
-	      { className: "row mt-4 justify-content-center" },
+	      'div',
+	      { className: 'row mt-4 justify-content-center' },
 	      React.createElement(
-	        "form",
-	        { className: "col-md-6 col-lg-4" },
+	        'form',
+	        { ref: 'loginForm',
+	          className: 'col-md-6 col-lg-4',
+	          onSubmit: this.onFormSubmit,
+	          noValidate: true
+	        },
 	        React.createElement(
-	          "div",
-	          { clasName: "form-group" },
+	          'div',
+	          { clasName: 'form-group mt-1' },
 	          React.createElement(
-	            "label",
+	            'label',
 	            null,
-	            "Email"
+	            'Email'
 	          ),
-	          React.createElement("input", { className: "form-control", type: "email", required: true })
+	          React.createElement('input', { className: 'form-control',
+	            type: 'email',
+	            placeholder: 'email address',
+	            onChange: this.onInputChange,
+	            required: true }),
+	          React.createElement(
+	            'div',
+	            { className: 'invalid-feedback' },
+	            'invalid email address'
+	          )
 	        ),
 	        React.createElement(
-	          "div",
-	          { className: "form-group" },
+	          'div',
+	          { className: 'form-group mt-2' },
 	          React.createElement(
-	            "label",
+	            'label',
 	            null,
-	            "Password"
+	            'Password'
 	          ),
-	          React.createElement("input", { className: "form-control", type: "password", required: true })
+	          React.createElement('input', { className: 'form-control',
+	            ref: 'passwordInput',
+	            type: 'password',
+	            onChange: this.onInputChange,
+	            pattern: '(?=.*\\W).{10,}',
+	            required: true
+	          }),
+	          React.createElement(
+	            'div',
+	            { className: 'invalid-feedback' },
+	            'invalid password (please enter at least 10 characters including at least one non-alphanumeric, for example: !, $, #, or %)'
+	          )
 	        ),
 	        React.createElement(
-	          "button",
-	          { className: "btn btn-primary", type: "submit", onClick: this.handleSubmit },
-	          "Submit"
+	          'button',
+	          { className: 'btn btn-primary' },
+	          'Submit'
 	        )
 	      )
 	    );
 	  }
 	});
+
 	module.exports = login;
 
 /***/ }),
