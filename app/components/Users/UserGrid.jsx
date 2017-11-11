@@ -1,3 +1,5 @@
+require('./UserGrid.css');
+
 let React = require("react");
 
 let userGrid = React.createClass({
@@ -5,17 +7,21 @@ let userGrid = React.createClass({
   render: function() {
 
     let userCards = this.props.list.map(function(u, idx){
+      let bem = `user-grid__card user-grid__card--priority-${u.priority}`;
+      let cardClassName=`${bem} card card-inverse text-center p-2 mt-md-4`;
       return (
-        <div className="card col-sm-4 text-center" key={idx}>
-          <h2>{u.name}</h2>
-          <span>{u.age}</span>
-          <span>{u.category}</span>
+        <div className="col-md-4" key={idx}>
+          <div className={cardClassName}>
+            <h2>{u.name}</h2>
+            <span>{u.age}</span>
+            <span>{u.category}</span>
+          </div>
         </div>
       );
     });
 
     return (
-      <div className="row">
+      <div className="user-grid row">
         {userCards}
       </div>
     )

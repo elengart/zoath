@@ -6,17 +6,17 @@ let login = React.createClass({
   },
   render: function() {
     return (
-      <div className="row justify-content-center">
+      <div className="row mt-4 justify-content-center">
         <form className="col-md-6 col-lg-4">
             <div clasName="form-group">
-              <label for="useremail">Email</label>
+              <label>Email</label>
               <input className="form-control" type="email" required />
             </div>
             <div className="form-group">
-              <label for="password">Password</label>
+              <label>Password</label>
               <input className="form-control" type="password" required />
             </div>
-            <button type="submit" onClick={this.handleSubmit}>Submit</button>
+            <button className="btn btn-primary" type="submit" onClick={this.handleSubmit}>Submit</button>
         </form>
       </div>
     );
