@@ -25433,7 +25433,7 @@
 	  render: function () {
 	    return React.createElement(
 	      "div",
-	      null,
+	      { className: "main" },
 	      React.createElement(
 	        "header",
 	        { className: "navbar navbar-light bg-light justify-content-center" },
@@ -25566,9 +25566,7 @@
 	const { sortSelectOptions } = __webpack_require__(236);
 
 	function getUsersFromStore() {
-	  return {
-	    users: AppStore.getAllUsers()
-	  };
+	  return AppStore.getAllUsers();
 	}
 
 	let users = React.createClass({
@@ -25591,14 +25589,19 @@
 	    this.setState(getUsersFromStore());
 	  },
 
-	  _handleSort: function (selected) {
-	    AppActions.sortUsers(selected.target.value);
+	  _handleSort: function (e) {
+	    AppActions.sortUsers(e.target.value);
+	  },
+
+	  _handleFilter: function (e) {
+	    AppActions.filterUsers(e.target.value);
 	  },
 
 	  render: function () {
+	    console.log(this.state);
 	    return React.createElement(
 	      "div",
-	      null,
+	      { className: "users" },
 	      React.createElement(UserGridSort, {
 	        onSelectChange: this._handleSort,
 	        options: sortSelectOptions
@@ -25610,14 +25613,15 @@
 	          "div",
 	          { className: "col-md-2" },
 	          React.createElement(UserGridFilter, {
-	            onSelectChange: this._handleSort,
-	            options: sortSelectOptions
+	            onFilterChange: this._handleFilter,
+	            options: this.state.userFilters,
+	            title: this.state.userFilterTitle
 	          })
 	        ),
 	        React.createElement(
 	          "div",
 	          { className: "col-md-9" },
-	          React.createElement(UserGrid, { list: this.state.users })
+	          React.createElement(UserGrid, { list: this.state.userList })
 	        )
 	      )
 	    );
@@ -25636,8 +25640,16 @@
 	let EventEmitter = __webpack_require__(233).EventEmitter;
 	let userApi = __webpack_require__(234);
 
-	let users = [];
-	let usersUnsorted = [];
+	let users = [],
+	    usersDefault = [];
+
+	let userSortSelection = { type: 'FEATURED' };
+
+	let userFilters = [],
+	    userSelectedFilter = -1,
+	    userFilterTitle;
+
+	const filterBy = 'category';
 
 	let store = {
 	  emitChange: function () {
@@ -25650,21 +25662,76 @@
 	    this.removeListener(AppConstants.CHANGE_EVENT, callback);
 	  },
 
-	  getAllUsers: function () {
-	    if (!users.length) {
-	      users = userApi.getUsers();
-	      usersUnsorted = users;
-	    }
-	    return users;
+	  /**
+	  Get filters from user list
+	  */
+	  getFilters() {
+	    let cats = _.uniq(_.map(users, function (item) {
+	      return item[filterBy];
+	    }));
+
+	    userFilterTitle = `PICK A ${filterBy.toUpperCase()}`;
+	    userFilters = [{ label: 'ALL', value: 'all', checked: true }];
+	    cats.forEach(function (cat) {
+	      userFilters.push({
+	        value: cat,
+	        label: cat.toUpperCase()
+	      });
+	    });
 	  },
 
+	  /**
+	  Get user data from backend (if not in the store yet),
+	  */
+	  getAllUsers: function () {
+	    if (!usersDefault.length) {
+	      usersDefault = userApi.getUsers();
+	      users = usersDefault;
+	      this.getFilters();
+	    }
+	    return {
+	      userList: users,
+	      userFilters: userFilters,
+	      userFilterTitle: userFilterTitle,
+	      userSortSelection: userSortSelection
+	    };
+	  },
+
+	  /**
+	  Sort user list, save current sort selection
+	  */
 	  sortUsers: function (options) {
 	    let { type, field, order } = options;
+
+	    userSortSelection = options;
 	    if (type === 'FEATURED') {
-	      users = usersUnsorted;
+	      users = usersDefault;
 	      return;
 	    }
 	    users = _.orderBy(users, [field], [order]);
+	  },
+
+	  /**
+	    Filter user list, save curren filter selection, keep current sort
+	  */
+	  filterUsers: function (filterValue) {
+	    userSelectedFilter = filterValue;
+
+	    if (filterValue === 'all') {
+	      users = usersDefault;
+	    } else {
+	      users = _.filter(usersDefault, function (user) {
+	        return user[filterBy] === filterValue;
+	      });
+	    }
+	    // restore sort
+	    if (userSortSelection.type !== 'FEATURED') {
+	      this.sortUsers(userSortSelection);
+	    }
+	    // update state of the radio button group
+	    userFilters.forEach(function (f) {
+	      f.checked = f.value === filterValue;
+	    });
 	  }
 	};
 
@@ -25680,6 +25747,11 @@
 
 	    case AppConstants.SORT_USERS:
 	      AppStore.sortUsers(action.options);
+	      AppStore.emitChange();
+	      break;
+
+	    case AppConstants.FILTER_USERS:
+	      AppStore.filterUsers(action.options);
 	      AppStore.emitChange();
 	      break;
 	    default:
@@ -43446,6 +43518,8 @@
 /* 234 */
 /***/ (function(module, exports) {
 
+	// "fake" getting user list from backend
+	// normally it will be ajax request
 	let users = {
 	  "data": [{
 	    "name": "Joe",
@@ -43512,10 +43586,18 @@
 	      actionType: GET_ALL_USERS
 	    });
 	  },
+
 	  sortUsers: function (selectedValue) {
 	    AppDispatcher.handleViewAction({
 	      actionType: AppConstants.SORT_USERS,
 	      options: Object.assign({}, { type: selectedValue }, sortOptions[selectedValue])
+	    });
+	  },
+
+	  filterUsers: function (selectedValue) {
+	    AppDispatcher.handleViewAction({
+	      actionType: AppConstants.FILTER_USERS,
+	      options: selectedValue
 	    });
 	  }
 	};
@@ -43602,7 +43684,7 @@
 
 	    return React.createElement(
 	      "div",
-	      { className: "user-grid row" },
+	      { className: "user-grid row bg-light pb-3" },
 	      userCards
 	    );
 	  }
@@ -44224,7 +44306,7 @@
 	    let { onSelectChange, options } = this.props;
 	    return React.createElement(
 	      "div",
-	      { className: "row p-2 bg-zola justify-content-center" },
+	      { className: "user-grid-sort row p-2 bg-zola justify-content-center" },
 	      React.createElement(
 	        "div",
 	        { className: "form-inline" },
@@ -44252,17 +44334,46 @@
 	let React = __webpack_require__(1);
 
 	let UserGridFilter = React.createClass({
-	      displayName: "UserGridFilter",
+	  displayName: "UserGridFilter",
 
 
-	      render: function () {
-	            let { onSelectChange, options } = this.props;
-	            return React.createElement(
-	                  "aside",
-	                  null,
-	                  "lorem ipsum"
-	            );
-	      }
+	  renderRadioButtons: function (options, onFilterChange) {
+	    return options.map(function (o, idx) {
+	      return React.createElement(
+	        "div",
+	        { className: "radio", key: idx },
+	        React.createElement(
+	          "label",
+	          null,
+	          o.label,
+	          React.createElement("input", { className: "ml-2",
+	            type: "radio",
+	            value: o.value,
+	            checked: o.checked,
+	            onChange: onFilterChange
+	          })
+	        )
+	      );
+	    });
+	  },
+
+	  render: function () {
+	    let { onFilterChange, options, title } = this.props;
+	    return React.createElement(
+	      "aside",
+	      { className: "user-grid-filter" },
+	      React.createElement(
+	        "div",
+	        { className: "mt-3 mb-2" },
+	        title
+	      ),
+	      React.createElement(
+	        "form",
+	        null,
+	        this.renderRadioButtons(options, onFilterChange)
+	      )
+	    );
+	  }
 	});
 
 	module.exports = UserGridFilter;

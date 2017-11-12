@@ -21,7 +21,7 @@ let userGrid = React.createClass({
     });
 
     return (
-      <div className="user-grid row">
+      <div className="user-grid row bg-light pb-3">
         {userCards}
       </div>
     )

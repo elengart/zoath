@@ -1,3 +1,14 @@
 .bg-zola {
   background-color: #01b4c0;
 }
+
+@media (max-width: 769px) {
+  .user-grid-filter,
+  .user-grid-sort {
+      text-align: center;
+  }
+  .user-grid-sort label,
+  .user-grid-sort select {
+    width: 100%;
+  }
+}

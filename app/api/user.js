@@ -1,3 +1,5 @@
+// "fake" getting user list from backend
+// normally it will be ajax request
 let users =
   {
     "data": [

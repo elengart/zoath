@@ -9,9 +9,7 @@ let UserGridFilter = require("./UserGridFilter.jsx");
 const {sortSelectOptions} = require("../../constants/UserSortOptions.js");
 
 function getUsersFromStore() {
-  return {
-    users: AppStore.getAllUsers()
-  }
+  return AppStore.getAllUsers();
 }
 
 let users = React.createClass({
@@ -32,13 +30,18 @@ let users = React.createClass({
     this.setState(getUsersFromStore());
   },
 
-  _handleSort: function(selected) {
-    AppActions.sortUsers(selected.target.value);
+  _handleSort: function(e) {
+    AppActions.sortUsers(e.target.value);
+  },
+
+  _handleFilter: function(e) {
+    AppActions.filterUsers(e.target.value);
   },
 
   render: function() {
+    console.log(this.state);
     return (
-      <div>
+      <div className="users">
         <UserGridSort
             onSelectChange={this._handleSort}
             options={sortSelectOptions}
@@ -46,12 +49,13 @@ let users = React.createClass({
         <div className="row">
           <div className="col-md-2">
             <UserGridFilter
-                onSelectChange={this._handleSort}
-                options={sortSelectOptions}
+                onFilterChange={this._handleFilter}
+                options={this.state.userFilters}
+                title={this.state.userFilterTitle}
             />
           </div>
           <div className="col-md-9">
-            <UserGrid list = {this.state.users} />
+            <UserGrid list = {this.state.userList} />
           </div>
         </div>
       </div>

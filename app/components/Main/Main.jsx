@@ -4,7 +4,7 @@ let {Link} = require("react-router");
 let main = React.createClass({
   render: function() {
     return (
-      <div>
+      <div className="main">
           <header className="navbar navbar-light bg-light justify-content-center">
             <nav className="nav">
               <Link className="nav-link" to="login" activeClassName="active">

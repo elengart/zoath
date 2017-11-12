@@ -13,7 +13,7 @@ let UserGridSort = React.createClass({
    render: function(){
       let {onSelectChange, options} = this.props;
       return (
-        <div className="row p-2 bg-zola justify-content-center">
+        <div className="user-grid-sort row p-2 bg-zola justify-content-center">
           <div className="form-inline">
             <label className="mr-2">SORT BY</label>
             <select className="form-control" onChange={onSelectChange}>
