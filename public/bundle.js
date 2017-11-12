@@ -43536,6 +43536,9 @@
 	   }, {
 	      label: 'Name, Descending',
 	      value: 'NAME_DESC'
+	   }, {
+	      label: 'Priority, Low to High',
+	      value: 'PRIORITY_ASC'
 	   }],
 
 	   sortOptions: {
@@ -43547,6 +43550,10 @@
 	      NAME_DESC: {
 	         field: 'name',
 	         order: 'desc'
+	      },
+	      PRIORITY_ASC: {
+	         field: 'priority',
+	         order: 'asc'
 	      }
 	   }
 	};
