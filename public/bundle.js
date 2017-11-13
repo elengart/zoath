@@ -43877,33 +43877,34 @@
 	let React = __webpack_require__(1);
 
 	let userGrid = React.createClass({
-	  displayName: "userGrid",
+	  displayName: 'userGrid',
 
 
 	  render: function () {
 
 	    let userCards = this.props.list.map(function (u, idx) {
-	      let bem = `user-grid__card user-grid__card--priority-${u.priority}`;
+	      let block = 'user-grid-card';
+	      let bem = `${block} ${block}--priority-${u.priority}`;
 	      let cardClassName = `${bem} card card-inverse text-center p-2 mt-md-4`;
 	      return React.createElement(
-	        "div",
-	        { className: "col-md-4", key: idx },
+	        'div',
+	        { className: 'col-md-4', key: idx },
 	        React.createElement(
-	          "div",
+	          'div',
 	          { className: cardClassName },
 	          React.createElement(
-	            "h2",
-	            null,
+	            'h2',
+	            { className: `${block}__name` },
 	            u.name
 	          ),
 	          React.createElement(
-	            "span",
-	            null,
+	            'span',
+	            { className: `${block}__age` },
 	            u.age
 	          ),
 	          React.createElement(
-	            "span",
-	            null,
+	            'span',
+	            { className: `${block}__category` },
 	            u.category
 	          )
 	        )
@@ -43911,8 +43912,8 @@
 	    });
 
 	    return React.createElement(
-	      "div",
-	      { className: "user-grid row bg-light pb-3" },
+	      'div',
+	      { className: 'user-grid row bg-light pb-3' },
 	      userCards
 	    );
 	  }
@@ -43960,7 +43961,7 @@
 
 
 	// module
-	exports.push([module.id, "\n.user-grid__card {\n  color: #fff;\n}\n.user-grid__card--priority-1 {\n  background-color: darkorange;\n}\n\n.user-grid__card--priority-2 {\n  background-color: green;\n}\n\n.user-grid__card--priority-3 {\n  background-color: blue;\n}\n\n.user-grid__card--priority-4 {\n  background-color: purple;\n}\n", ""]);
+	exports.push([module.id, "\n.user-grid-card {\n  color: #fff;\n  border:  2px solid black;\n}\n.user-grid-card__name {\n  font-size: 16px;\n  font-weight: bold;\n}\n.user-grid-card__age {\n  font-size: 12px;\n  font-style: italic;\n}\n.user-grid-card__category{\n  font-size: 12px;\n  font-weight: normal;\n}\n.user-grid-card--priority-1 {\n  background-color: darkorange;\n}\n\n.user-grid-card--priority-2 {\n  background-color: green;\n}\n\n.user-grid-card--priority-3 {\n  background-color: blue;\n}\n\n.user-grid-card--priority-4 {\n  background-color: purple;\n}\n", ""]);
 
 	// exports
 

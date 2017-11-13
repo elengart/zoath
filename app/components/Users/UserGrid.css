@@ -1,19 +1,32 @@
 
-.user-grid__card {
+.user-grid-card {
   color: #fff;
+  border:  2px solid black;
 }
-.user-grid__card--priority-1 {
+.user-grid-card__name {
+  font-size: 16px;
+  font-weight: bold;
+}
+.user-grid-card__age {
+  font-size: 12px;
+  font-style: italic;
+}
+.user-grid-card__category{
+  font-size: 12px;
+  font-weight: normal;
+}
+.user-grid-card--priority-1 {
   background-color: darkorange;
 }
 
-.user-grid__card--priority-2 {
+.user-grid-card--priority-2 {
   background-color: green;
 }
 
-.user-grid__card--priority-3 {
+.user-grid-card--priority-3 {
   background-color: blue;
 }
 
-.user-grid__card--priority-4 {
+.user-grid-card--priority-4 {
   background-color: purple;
 }
