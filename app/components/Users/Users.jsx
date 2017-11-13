@@ -6,8 +6,6 @@ let UserGrid = require("./UserGrid.jsx");
 let UserGridSort = require("./UserGridSort.jsx");
 let UserGridFilter = require("./UserGridFilter.jsx");
 
-const {sortSelectOptions} = require("../../constants/UserSortOptions.js");
-
 function getUsersFromStore() {
   return AppStore.getAllUsers();
 }
@@ -20,6 +18,7 @@ let users = React.createClass({
 
   componentDidMount: function() {
     AppStore.listen(this.listChanged);
+    AppActions.getUsers();
   },
 
   componentWillUnmount: function() {
@@ -39,23 +38,23 @@ let users = React.createClass({
   },
 
   render: function() {
-    console.log(this.state);
+    let {userList, userSortSelectOptions, userFilters, userFilterTitle} = this.state;
     return (
       <div className="users">
         <UserGridSort
             onSelectChange={this._handleSort}
-            options={sortSelectOptions}
+            options={userSortSelectOptions}
         />
         <div className="row">
           <div className="col-md-2">
             <UserGridFilter
                 onFilterChange={this._handleFilter}
-                options={this.state.userFilters}
-                title={this.state.userFilterTitle}
+                options={userFilters}
+                title={userFilterTitle}
             />
           </div>
           <div className="col-md-9">
-            <UserGrid list = {this.state.userList} />
+            <UserGrid list = {userList} />
           </div>
         </div>
       </div>

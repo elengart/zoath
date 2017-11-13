@@ -2,12 +2,22 @@ let _ = require("lodash");
 let AppDispatcher = require("../dispatcher/AppDispatcher.js");
 let AppConstants = require("../constants/AppConstants.js");
 let EventEmitter = require("events").EventEmitter;
-let userApi = require("../api/user.js");
+
+const {sortSelectOptions} = require("../constants/UserSortOptions.js");
+
+const {
+  USER_ACTIONS,
+  USER_SERVER_ACTIONS,
+  LOGIN_ACTIONS,
+  CHANGE_EVENT
+} = AppConstants;
 
 let users = [],
     usersDefault = [];
 
-let userSortSelection = {type:'FEATURED'};
+let userSortSelection = {
+    selection:'FEATURED'
+};
 
 let userFilters = [],
     userSelectedFilter = -1,
@@ -16,14 +26,15 @@ let userFilters = [],
 const filterBy = 'category';
 
 let store = {
+  /* flux functions - components can subscribe to listen to store changes */
   emitChange: function() {
-    this.emit(AppConstants.CHANGE_EVENT);
+    this.emit(CHANGE_EVENT);
   },
   listen: function(callback){
-    this.on(AppConstants.CHANGE_EVENT, callback);
+    this.on(CHANGE_EVENT, callback);
   },
   unlisten: function(callback){
-    this.removeListener(AppConstants.CHANGE_EVENT, callback);
+    this.removeListener(CHANGE_EVENT, callback);
   },
 
   /**
@@ -45,30 +56,35 @@ let store = {
   },
 
   /**
-  Get user data from backend (if not in the store yet),
+    Initilize store and return user grid data
   */
-  getAllUsers: function() {
-    if (!usersDefault.length) {
-      usersDefault = userApi.getUsers();
+  setupUserStore: function() {
       users = usersDefault;
       this.getFilters();
-    }
+  },
+
+ /**
+  Set State for the user grid
+ */
+  getAllUsers: function() {
     return {
       userList: users,
       userFilters: userFilters,
       userFilterTitle: userFilterTitle,
+      userSortSelectOptions: sortSelectOptions,
       userSortSelection: userSortSelection
     };
   },
+
 
   /**
   Sort user list, save current sort selection
   */
   sortUsers: function(options) {
-    let {type, field, order} = options;
+    let {selection, field, order} = options;
 
     userSortSelection = options;
-    if (type === 'FEATURED') {
+    if (selection === 'FEATURED') {
         users = usersDefault;
         return;
     }
@@ -76,7 +92,7 @@ let store = {
   },
 
   /**
-    Filter user list, save curren filter selection, keep current sort
+    Filter user list, save current filter selection, keep current sort
   */
   filterUsers: function(filterValue) {
     userSelectedFilter = filterValue;
@@ -89,7 +105,7 @@ let store = {
       });
     }
     // restore sort
-    if (userSortSelection.type !== 'FEATURED') {
+    if (userSortSelection.selection !== 'FEATURED') {
       this.sortUsers(userSortSelection);
     }
     // update state of the radio button group
@@ -102,23 +118,27 @@ let store = {
 
 let AppStore = Object.assign({}, EventEmitter.prototype, store);
 
+/* flux: dispatcher broadcasts actions */
 AppDispatcher.register(function(payload) {
     let action = payload.action;
+
     switch(action.actionType) {
-      case AppConstants.GET_ALL_USERS:
-        AppStore.getAllUsers();
+      case USER_SERVER_ACTIONS.GET_USERS:
+        usersDefault = action.users;
+        AppStore.setupUserStore();
         AppStore.emitChange();
         break;
 
-      case AppConstants.SORT_USERS:
+      case USER_ACTIONS.SORT_USERS:
         AppStore.sortUsers(action.options);
         AppStore.emitChange();
         break;
 
-      case AppConstants.FILTER_USERS:
+      case USER_ACTIONS.FILTER_USERS:
         AppStore.filterUsers(action.options);
         AppStore.emitChange();
         break;
+
       default:
         // do nothing
     }
