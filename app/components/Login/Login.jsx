@@ -13,7 +13,7 @@ let login = React.createClass({
   },
 
   componentWillUnmount: function() {
-    LoginStore.listen(this.authChanged);
+    LoginStore.unlisten(this.authChanged);
   },
 
   authChanged: function() {
@@ -30,8 +30,8 @@ let login = React.createClass({
   },
 
   onFormSubmit: function(e) {
-    event.preventDefault();
-    event.stopPropagation();
+    // event.preventDefault();
+    // event.stopPropagation();
 
     let f = this.refs.loginForm;
     let valid = f.checkValidity();
@@ -103,7 +103,11 @@ let login = React.createClass({
                   invalid password (please enter at least 10 characters including at least one non-alphanumeric, for example: !, $, #, or %)
                 </div>
               </div>
-              <button className="btn btn-primary">Submit</button>
+              <button className="btn btn-primary"
+               onClick={(e)=>{e.preventDefault(); this.onFormSubmit(); return false;}}
+              >
+                Submit
+              </button>
           </form>
         </div>
       </div>

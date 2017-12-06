@@ -25917,8 +25917,8 @@
 	  },
 
 	  onFormSubmit: function (e) {
-	    event.preventDefault();
-	    event.stopPropagation();
+	    // event.preventDefault();
+	    // event.stopPropagation();
 
 	    let f = this.refs.loginForm;
 	    let valid = f.checkValidity();
@@ -26019,7 +26019,11 @@
 	          ),
 	          React.createElement(
 	            "button",
-	            { className: "btn btn-primary" },
+	            { className: "btn btn-primary",
+	              onClick: e => {
+	                e.preventDefault();this.onFormSubmit();return false;
+	              }
+	            },
 	            "Submit"
 	          )
 	        )
